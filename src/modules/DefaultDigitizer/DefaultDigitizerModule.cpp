@@ -9,6 +9,8 @@
 
 #include "DefaultDigitizerModule.hpp"
 
+#include <stl_random/distributions.hpp>
+
 #include "core/utils/unit.h"
 #include "tools/ROOT.h"
 
@@ -111,7 +113,7 @@ void DefaultDigitizerModule::run(unsigned int) {
         }
 
         // Add electronics noise from Gaussian:
-        std::normal_distribution<double> el_noise(0, config_.get<unsigned int>("electronics_noise"));
+        allpix::normal_distribution<double> el_noise(0, config_.get<unsigned int>("electronics_noise"));
         charge += el_noise(random_generator_);
 
         LOG(DEBUG) << "Charge with noise: " << Units::display(charge, "e");
