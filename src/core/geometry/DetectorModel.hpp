@@ -232,12 +232,12 @@ namespace allpix {
          * @brief Get size of the collection diode
          * @return Size of the collection diode implant
          */
-        virtual ROOT::Math::XYVector getImplantSize() const { return implant_size_; }
+        virtual ROOT::Math::XYZVector getImplantSize() const { return implant_size_; }
         /**
          * @brief Set the size of the implant (collection diode) within a pixel
          * @param val Size of the collection diode implant
          */
-        void setImplantSize(ROOT::Math::XYVector val) { implant_size_ = std::move(val); }
+        void setImplantSize(ROOT::Math::XYZVector val) { implant_size_ = std::move(val); }
         /**
          * @brief Get total size of the pixel grid
          * @return Size of the pixel grid
@@ -373,7 +373,7 @@ namespace allpix {
 
         ROOT::Math::DisplacementVector2D<ROOT::Math::Cartesian2D<int>> number_of_pixels_;
         ROOT::Math::XYVector pixel_size_;
-        ROOT::Math::XYVector implant_size_;
+        ROOT::Math::XYZVector implant_size_;
 
         double sensor_thickness_{};
         std::array<double, 4> sensor_excess_{};
