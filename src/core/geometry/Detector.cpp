@@ -130,7 +130,8 @@ bool Detector::isWithinImplant(const ROOT::Math::XYZPoint& local_pos) const {
                        model_->getPixelSize().y() / 2;
 
     return (std::fabs(x_mod_pixel) <= std::fabs(model_->getImplantSize().x() / 2) &&
-            std::fabs(y_mod_pixel) <= std::fabs(model_->getImplantSize().y() / 2));
+            std::fabs(y_mod_pixel) <= std::fabs(model_->getImplantSize().y() / 2) &&
+            local_pos.z() >= model_->getSensorSize().z() / 2 - model_->getImplantSize().z());
 }
 
 /**
