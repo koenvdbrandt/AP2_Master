@@ -348,6 +348,11 @@ void VisualizationGeant4Module::set_visualization_attributes() {
     G4VisAttributes SensorVisAtt = G4VisAttributes(sensorColor);
     SensorVisAtt.SetForceSolid(false);
 
+    // Conductor (metal stack, implants)
+    auto conductorColor = G4Color(0.8, 0.16, 0.16, alpha); // Red-ish
+    G4VisAttributes ConductorVisAtt = G4VisAttributes(conductorColor);
+    ConductorVisAtt.SetForceSolid(false);
+
     // The box holding all the pixels
     G4VisAttributes BoxVisAtt = G4VisAttributes(sensorColor);
     BoxVisAtt.SetForceSolid(false);
@@ -357,11 +362,13 @@ void VisualizationGeant4Module::set_visualization_attributes() {
     auto simple_view = config_.get<bool>("simple_view");
     if(simple_view) {
         SensorVisAtt.SetVisibility(false);
+        ConductorVisAtt.SetVisibility(true);
         BoxVisAtt.SetVisibility(true);
         BumpVisAtt.SetVisibility(false);
         BumpBoxVisAtt.SetVisibility(true);
     } else {
         SensorVisAtt.SetVisibility(true);
+        ConductorVisAtt.SetVisibility(true);
         BoxVisAtt.SetVisibility(true);
         BumpVisAtt.SetVisibility(true);
         BumpBoxVisAtt.SetVisibility(false);
@@ -377,6 +384,11 @@ void VisualizationGeant4Module::set_visualization_attributes() {
         auto sensor_log = detector->getExternalObject<G4LogicalVolume>("sensor_log");
         if(sensor_log != nullptr) {
             sensor_log->SetVisAttributes(BoxVisAtt);
+        }
+
+        auto implants_log = detector->getExternalObject<G4LogicalVolume>("implants_log");
+        if(implants_log != nullptr) {
+            implants_log->SetVisAttributes(ConductorVisAtt);
         }
 
         auto pixel_log = detector->getExternalObject<G4LogicalVolume>("pixel_log");
