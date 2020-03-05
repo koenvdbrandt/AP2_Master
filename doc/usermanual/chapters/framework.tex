@@ -319,8 +319,12 @@ Determines the base size of the sensor together with the \parameter{pixel_size} 
 Provided as 2D parameter in the x-y-plane.
 This parameter is required for all models.
 \item \parameter{implant_size}: The size of the collection diode implant in each pixel of the matrix.
-Provided as 2D parameter in the x-y-plane.
-This parameter is optional, the implant size defaults to the pixel pitch if not specified otherwise.
+This parameter can be provided either as 2D value in the x-y-plane or as 3D value with additional implant depth from the sensor surface.
+In the latter case, no charge carrier propagation will be performed in the implant, but it is removed from the active sensor volume and replaced with the conductive material defined via \parameter{implant_material}.
+This parameter is optional, the implant size defaults to the pixel pitch and zero thickness if not specified otherwise.
+\item \parameter{implant_material}: The material of the sensor implants defined via \parameter{implant_size}. Only used if a non-negligible implant thickness is specified. Defaults to aluminum.
+It should be noted that \apsq does not provide a set of materials to choose from; it is up to the modules using this parameter to implement the materials such that they can use it.
+Chapter~\ref{ch:modules} provides details about the materials supported by the geometry builder module (\parameter{GeometryBuilderGeant4}).
 \item \parameter{sensor_thickness}: Thickness of the active area of the detector model containing the individual pixels.
 This parameter is required for all models.
 \item \texttt{\textbf{sensor\_excess\_\textit{direction}}}: With direction either \parameter{top}, \parameter{bottom}, \parameter{right} or \parameter{left}, where the top, bottom, right and left direction are the positive y-axis, the negative y-axis, the positive x-axis and the negative x-axis, respectively.
