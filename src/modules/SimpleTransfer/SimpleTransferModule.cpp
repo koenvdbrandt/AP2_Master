@@ -90,7 +90,7 @@ void SimpleTransferModule::run(unsigned int) {
            config_.get<double>("max_depth_distance")) {
             LOG(DEBUG) << "Skipping set of " << propagated_charge.getCharge() << " propagated charges at "
                        << Units::display(propagated_charge.getLocalPosition(), {"mm", "um"})
-                       << " because their local position is not in implant range";
+                       << " because their local position is not near sensor surface";
             continue;
         }
 
