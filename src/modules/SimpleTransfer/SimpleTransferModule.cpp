@@ -90,10 +90,19 @@ void SimpleTransferModule::run(unsigned int) {
     std::map<Pixel::Index, std::vector<const PropagatedCharge*>> pixel_map;
     for(auto& propagated_charge : propagated_message_->getData()) {
         auto position = propagated_charge.getLocalPosition();
-        // Ignore if outside depth range of implant
+
+        // Ignore if outside the implant region:
+        if(collect_from_implant_ && !detector_->isWithinImplant(position)) {
+            LOG(DEBUG) << "Skipping set of " << propagated_charge.getCharge() << " propagated charges at "
+                       << Units::display(propagated_charge.getLocalPosition(), {"mm", "um"})
+                       << " because it is outside the pixel implant.";
+            continue;
+        }
+
+        // Ignore if outside depth range of implant - unless the implant is a volume and should govern the selection:
         // FIXME This logic should be improved
-        if(std::fabs(position.z() - (model_->getSensorCenter().z() + model_->getSensorSize().z() / 2.0)) >
-           config_.get<double>("max_depth_distance")) {
+        if(!implant_is_volume_ && std::fabs(position.z() - (model_->getSensorCenter().z() +
+                                                            model_->getSensorSize().z() / 2.0)) > max_depth_distance_) {
             LOG(DEBUG) << "Skipping set of " << propagated_charge.getCharge() << " propagated charges at "
                        << Units::display(propagated_charge.getLocalPosition(), {"mm", "um"})
                        << " because their local position is not near sensor surface";
@@ -109,14 +118,6 @@ void SimpleTransferModule::run(unsigned int) {
             LOG(DEBUG) << "Skipping set of " << propagated_charge.getCharge() << " propagated charges at "
                        << Units::display(propagated_charge.getLocalPosition(), {"mm", "um"})
                        << " because their nearest pixel (" << xpixel << "," << ypixel << ") is outside the grid";
-            continue;
-        }
-
-        // Ignore if outside the implant region:
-        if(config_.get<bool>("collect_from_implant") && !detector_->isWithinImplant(position)) {
-            LOG(DEBUG) << "Skipping set of " << propagated_charge.getCharge() << " propagated charges at "
-                       << Units::display(propagated_charge.getLocalPosition(), {"mm", "um"})
-                       << " because it is outside the pixel implant.";
             continue;
         }
 
