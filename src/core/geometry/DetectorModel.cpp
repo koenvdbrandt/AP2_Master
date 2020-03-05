@@ -51,6 +51,7 @@ DetectorModel::DetectorModel(std::string type, ConfigReader reader) : type_(std:
         throw InvalidValueError(config, "implant_size", "implant depth cannot be larger than sensor thickness");
     }
     setImplantSize(implant_size);
+    setImplantMaterial(config.get<std::string>("implant_material", "aluminum"));
 
     // Chip thickness
     setChipThickness(config.get<double>("chip_thickness", 0));
