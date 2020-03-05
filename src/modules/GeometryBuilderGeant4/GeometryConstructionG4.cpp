@@ -16,6 +16,7 @@
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
+#include <G4MultiUnion.hh>
 #include <G4NistManager.hh>
 #include <G4PVDivision.hh>
 #include <G4PVPlacement.hh>
@@ -237,8 +238,49 @@ void GeometryConstructionG4::build_detectors() {
                                                   model->getSensorSize().y() / 2.0,
                                                   model->getSensorSize().z() / 2.0);
         solids_.push_back(sensor_box);
+
+        /* IMPLANTS
+         * excise implants from sensor volume and fill them with the implant material
+         */
+        std::shared_ptr<G4VSolid> sensor_solid = sensor_box;
+        if(model->getImplantSize().z() > std::numeric_limits<double>::epsilon()) {
+            LOG(TRACE) << "Found implant with non-negligible depth, excising implants from sensor volume.";
+            auto implants = model->getImplantSize();
+
+            // Collect all implants in a G4MultiUnion solid to subtract from sensor solid:
+            auto implant_union = std::make_shared<G4MultiUnion>();
+            solids_.push_back(implant_union);
+
+            for(int npix_x = 0; npix_x < model->getNPixels().x(); npix_x++) {
+                for(int npix_y = 0; npix_y < model->getNPixels().y(); npix_y++) {
+                    // FIXME: We should extend the implant and shift it to avoid fake surfaces
+                    auto implant_box = std::make_shared<G4Box>(
+                        "sensor_implant_trench", implants.x() / 2.0, implants.y() / 2.0, implants.z() / 2.0 + 0.05 / 1000);
+                    solids_.push_back(implant_box);
+
+                    // Calculate transformation for the solid
+                    // FIXME: implant offset from pixel center currently not implemented
+                    G4Transform3D implant_transform(
+                        G4RotationMatrix(),
+                        G4ThreeVector(-model->getGridSize().x() / 2.0 + (npix_x + 0.5) * model->getPixelSize().x(),
+                                      -model->getGridSize().y() / 2.0 + (npix_y + 0.5) * model->getPixelSize().y(),
+                                      (model->getSensorSize().z() - implants.z()) / 2.0));
+
+                    // Add the new solid to the MultiUnion:
+                    implant_union->AddNode(*implant_box.get(), implant_transform);
+                }
+            }
+            implant_union->Voxelize();
+
+            G4Transform3D transform(G4RotationMatrix(), G4ThreeVector(0, 0, 0));
+            auto subtraction_solid = std::make_shared<G4SubtractionSolid>(
+                "sensor_implant_subtraction", sensor_box.get(), implant_union.get(), transform);
+            solids_.push_back(subtraction_solid);
+            sensor_solid = subtraction_solid;
+        }
+
         auto sensor_log =
-            make_shared_no_delete<G4LogicalVolume>(sensor_box.get(), materials_["silicon"], "sensor_" + name + "_log");
+            make_shared_no_delete<G4LogicalVolume>(sensor_solid.get(), materials_["silicon"], "sensor_" + name + "_log");
         detector->setExternalObject("sensor_log", sensor_log);
 
         // Place the sensor box
