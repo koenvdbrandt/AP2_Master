@@ -46,8 +46,10 @@ SimpleTransferModule::SimpleTransferModule(Configuration& config, Messenger* mes
     // Save detector model
     model_ = detector_->getModel();
 
-    // Cache flag for output plots:
+    // Cache flags:
     output_plots_ = config_.get<bool>("output_plots");
+    collect_from_implant_ = config_.get<bool>("collect_from_implant");
+    max_depth_distance_ = config_.get<double>("max_depth_distance");
 
     // Require propagated deposits for single detector
     messenger->bindSingle(this, &SimpleTransferModule::propagated_message_, MsgFlags::REQUIRED);

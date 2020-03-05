@@ -71,6 +71,11 @@ namespace allpix {
         // Flag whether to store output plots:
         bool output_plots_{};
 
+        // Flags to control collection:
+        bool collect_from_implant_{};
+        bool implant_is_volume_{};
+        double max_depth_distance_{};
+
         // Statistical information
         unsigned int total_transferred_charges_{};
         std::set<Pixel::Index> unique_pixels_;
