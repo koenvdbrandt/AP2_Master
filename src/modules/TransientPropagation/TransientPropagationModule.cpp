@@ -306,6 +306,12 @@ std::pair<ROOT::Math::XYZPoint, double> TransientPropagationModule::propagate(co
             step_length_histo_->Fill(static_cast<double>(Units::convert(step.value.norm(), "um")));
         }
 
+        if(detector_->isWithinImplant(static_cast<ROOT::Math::XYZPoint>(position))) {
+            LOG(TRACE) << "Carrier in implant: " << Units::display(static_cast<ROOT::Math::XYZPoint>(position), {"nm"});
+            // FIXME do we need an interpolation for accuracy here as well?
+            within_sensor = false;
+        }
+
         // Check for overshooting outside the sensor and correct for it:
         if(!detector_->isWithinSensor(static_cast<ROOT::Math::XYZPoint>(position))) {
             LOG(TRACE) << "Carrier outside sensor: " << Units::display(static_cast<ROOT::Math::XYZPoint>(position), {"nm"});
