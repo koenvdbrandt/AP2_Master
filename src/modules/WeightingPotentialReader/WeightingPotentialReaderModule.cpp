@@ -65,7 +65,7 @@ void WeightingPotentialReaderModule::init() {
         auto function = get_pad_potential_function(implant, thickness_domain);
         detector_->setWeightingPotentialFunction(function, thickness_domain, FieldType::CUSTOM);
     } else {
-        throw InvalidValueError(config_, "model", "model should be 'init' or `pad`");
+        throw InvalidValueError(config_, "model", "model should be 'init' or 'pad'");
     }
 
     // Produce histograms if needed
