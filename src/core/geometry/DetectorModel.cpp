@@ -39,8 +39,8 @@ DetectorModel::DetectorModel(std::string type, ConfigReader reader) : type_(std:
     try {
         // Attempt to read a three-dimensional implant definition:
         implant_size = config.get<XYZVector>("implant_size");
-    } catch(InvalidKeyError& e) {
-        // If 3D fails, attempt to read a (flat) 2D implant definition:
+    } catch(ConfigurationError&) {
+        // If 3D fails or key is not set at all, attempt to read a (flat) 2D implant definition, defaulting to full pixel
         auto implant_area = config.get<XYVector>("implant_size", pixel_size);
         implant_size = XYZVector(implant_area.x(), implant_area.y(), 0);
     }
