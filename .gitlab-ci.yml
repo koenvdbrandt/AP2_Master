@@ -88,6 +88,10 @@ cmp:mac1014-clang:
     extends: .compile
     tags:
         - mac
+    only:
+        - branches@allpix-squared/allpix-squared
+        - tags@allpix-squared/allpix-squared
+        - schedules@allpix-squared/allpix-squared
     before_script:
         - source .gitlab/ci/init_mac.sh
         - source .gitlab/ci/load_deps.sh
@@ -265,6 +269,10 @@ mod:mac1014-clang:
     extends: .testmod
     tags:
         - mac
+    only:
+        - branches@allpix-squared/allpix-squared
+        - tags@allpix-squared/allpix-squared
+        - schedules@allpix-squared/allpix-squared
     dependencies:
         - cmp:mac1014-clang
     before_script:
@@ -275,6 +283,10 @@ core:mac1014-clang:
     extends: .testcore
     tags:
         - mac
+    only:
+        - branches@allpix-squared/allpix-squared
+        - tags@allpix-squared/allpix-squared
+        - schedules@allpix-squared/allpix-squared
     dependencies:
         - cmp:mac1014-clang
     before_script:
