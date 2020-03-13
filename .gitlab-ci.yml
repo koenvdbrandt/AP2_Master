@@ -146,8 +146,6 @@ fmt:cc7-llvm-lint:
     stage: testing
     tags:
         - docker
-    only:
-        - merge_requests
 
 .testmod:
     extends: .test
@@ -305,6 +303,9 @@ core:mac1014-clang:
     stage: performance
     tags:
         - benchmark
+    only:
+        - merge_requests
+        - schedules
     script:
         - cd build/
         - ctest -R test_performance --output-on-failure
