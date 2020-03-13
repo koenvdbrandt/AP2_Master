@@ -108,6 +108,8 @@ cmp:mac1014-clang:
     stage: formatting
     tags:
         - docker
+    only:
+        - merge_requests
     before_script:
         - export COMPILER_TYPE="llvm"
         - source .gitlab/ci/init_x86_64.sh
@@ -140,6 +142,8 @@ fmt:cc7-llvm-lint:
     stage: testing
     tags:
         - docker
+    only:
+        - merge_requests
 
 .testmod:
     extends: .test
