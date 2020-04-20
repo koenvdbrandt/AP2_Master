@@ -95,6 +95,7 @@ cmp:mac1015-clang:
         - mac
     only:
         - /^.*$/@allpix-squared/allpix-squared
+        - merge_requests@allpix-squared/allpix-squared
     before_script:
         - source .gitlab/ci/init_x86_64.sh
         - source .gitlab/ci/load_deps.sh
