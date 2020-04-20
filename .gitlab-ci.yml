@@ -20,6 +20,11 @@ stages:
     stage: compilation
     tags:
         - docker
+    only:
+        - /^.*$/
+        - merge_requests
+        - schedules
+        - tags
     script:
         - mkdir build
         - cd build
@@ -89,9 +94,7 @@ cmp:mac1015-clang:
     tags:
         - mac
     only:
-        - branches@allpix-squared/allpix-squared
-        - tags@allpix-squared/allpix-squared
-        - schedules@allpix-squared/allpix-squared
+        - /^.*$/@allpix-squared/allpix-squared
     before_script:
         - source .gitlab/ci/init_x86_64.sh
         - source .gitlab/ci/load_deps.sh
@@ -112,11 +115,12 @@ cmp:mac1015-clang:
     stage: formatting
     tags:
         - docker
-    only:
-        - merge_requests
     before_script:
         - export COMPILER_TYPE="llvm"
         - source .gitlab/ci/init_x86_64.sh
+    only:
+        - merge_requests
+        - tags
 
 fmt:cc7-llvm-format:
     extends: .format
@@ -286,9 +290,7 @@ mod:mac1015-clang:
     tags:
         - mac
     only:
-        - branches@allpix-squared/allpix-squared
-        - tags@allpix-squared/allpix-squared
-        - schedules@allpix-squared/allpix-squared
+        - /^.*$/@allpix-squared/allpix-squared
     dependencies:
         - cmp:mac1015-clang
     before_script:
@@ -300,9 +302,7 @@ core:mac1015-clang:
     tags:
         - mac
     only:
-        - branches@allpix-squared/allpix-squared
-        - tags@allpix-squared/allpix-squared
-        - schedules@allpix-squared/allpix-squared
+        - /^.*$/@allpix-squared/allpix-squared
     dependencies:
         - cmp:mac1015-clang
     before_script:
@@ -324,6 +324,7 @@ core:mac1015-clang:
     only:
         - merge_requests
         - schedules
+        - tags
     script:
         - cd build/
         - ctest -R test_performance --output-on-failure
