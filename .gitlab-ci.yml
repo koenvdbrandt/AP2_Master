@@ -389,7 +389,11 @@ perf:cc7-gcc:
         paths:
             - public
         expire_in: 24 hour
-
+    only:
+        - /^.*$/
+        - merge_requests
+        - schedules
+        - tags
 
 # Compile Doxygen reference
 cmp:doxygen:
