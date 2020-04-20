@@ -168,6 +168,11 @@ fmt:coverage:
     stage: testing
     tags:
         - docker
+    only:
+        - /^.*$/
+        - merge_requests
+        - schedules
+        - tags
 
 .testmod:
     extends: .test
