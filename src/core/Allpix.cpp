@@ -16,6 +16,7 @@
 #include <thread>
 #include <utility>
 
+#include <TProcessID.h>
 #include <TROOT.h>
 #include <TRandom.h>
 #include <TStyle.h>
@@ -181,6 +182,12 @@ void Allpix::load() {
     // Enable relevant multithreading safety in ROOT
     // Required for spawned threads, even with a single worker
     ROOT::EnableThreadSafety();
+
+    // As stupid as this looks: let's overflow the TProcessID hash table to directly use TExMap for TRefs
+    // Summary: https://root-forum.cern.ch/t/resetting-tprocessid-objectcount-in-multihtreading-environment/38899
+    for(int i = 256; i--;) {
+        TProcessID::AddProcessID();
+    }
 
     // Set the default units to use
     register_units();
