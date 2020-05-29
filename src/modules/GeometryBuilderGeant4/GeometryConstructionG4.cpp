@@ -61,7 +61,6 @@ template <typename T, typename... Args> static std::shared_ptr<T> make_shared_no
  * First initializes all the materials. Then constructs the world from the internally calculated world size with a certain
  * margin. Finally builds all the individual detectors.
  */
-
 G4VPhysicalVolume* GeometryConstructionG4::Construct() {
     // Initialize materials
     init_materials();

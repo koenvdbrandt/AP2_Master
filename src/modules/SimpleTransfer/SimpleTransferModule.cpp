@@ -95,7 +95,7 @@ void SimpleTransferModule::run(unsigned int) {
         if(collect_from_implant_ && !detector_->isWithinImplant(position)) {
             LOG(DEBUG) << "Skipping set of " << propagated_charge.getCharge() << " propagated charges at "
                        << Units::display(propagated_charge.getLocalPosition(), {"mm", "um"})
-                       << " because it is outside the pixel implant.";
+                       << " because their local position is outside the pixel implant";
             continue;
         }
 
