@@ -46,7 +46,7 @@ SimpleTransferModule::SimpleTransferModule(Configuration& config, Messenger* mes
     // Save detector model
     model_ = detector_->getModel();
 
-    // Cache flags:
+    // Cache flag for output plots:
     output_plots_ = config_.get<bool>("output_plots");
     collect_from_implant_ = config_.get<bool>("collect_from_implant");
     max_depth_distance_ = config_.get<double>("max_depth_distance");
@@ -131,7 +131,7 @@ void SimpleTransferModule::run(unsigned int) {
             drift_time_histo->Fill(propagated_charge.getEventTime(), propagated_charge.getCharge());
         }
 
-        LOG(DEBUG) << "Set of " << propagated_charge.getCharge() << " propagated charges at "
+        LOG(TRACE) << "Set of " << propagated_charge.getCharge() << " propagated charges at "
                    << Units::display(propagated_charge.getLocalPosition(), {"mm", "um"}) << " brought to pixel "
                    << pixel_index;
 
